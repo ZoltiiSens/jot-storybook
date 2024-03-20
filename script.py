@@ -2,10 +2,11 @@ import os
 
 
 class StorybookCreator:
-    def __init__(self, src_path, out_path):
+    def __init__(self, src_path, out_path, additional_path):
         self.menu = ''
         self.src_path = src_path
         self.out_path = out_path
+        self.additional_path = additional_path
 
     def get_menu():
         return self.menu
@@ -35,6 +36,7 @@ class StorybookCreator:
             content = f.read()
         content = content.replace('///menu///', self.menu)
         content = content.replace('///path///', path.replace('.html','').replace('/', ' / ')[2:])
+        content = content.replace('///title///', path.replace('.html','').split('/')[-1])
         content = content.replace('///file_path///', path)
         with open(f'{self.src_path}/design/{path}', 'r') as f:
             element = f.read()
@@ -48,7 +50,7 @@ class StorybookCreator:
         for elem in os.listdir(f'{self.src_path}/design/{path}'):
             if elem.endswith('.html'):
                 self._addToMenu(tab, '<li>')
-                self._addToMenu(tab, f'\t<a href="/{self.out_path}/design{path}/{elem}">{elem}</a>')
+                self._addToMenu(tab, f'\t<a href="{self.additional_path}/{self.out_path}/design{path}/{elem}">{elem}</a>')
                 self._addToMenu(tab, '</li>')
             else:
                 self._addToMenu(tab, '<li>')
@@ -68,7 +70,7 @@ class StorybookCreator:
 
 
 if __name__ == '__main__':
-    storybookCreator = StorybookCreator(src_path='src', out_path='out')
+    storybookCreator = StorybookCreator(src_path='src', out_path='out', additional_path='/jot-storybook')
     storybookCreator.create_fs('')
 
 
